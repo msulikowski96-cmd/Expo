@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Logowanie - CV Optimizer Pro{% endblock %}
+
+{% block content %}
+<section class="min-vh-100 d-flex align-items-center" style="background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--primary-bg) 100%); padding: 2rem 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                <div class="card animate-fade-in-up">
+                    <div class="card-body" style="padding: 3rem;">
+                        <!-- Header -->
+                        <div class="text-center mb-4">
+                            <div class="brand-icon mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                            <h2 class="text-2xl font-weight-bold mb-2">Witaj ponownie!</h2>
+                            <p class="text-secondary">Zaloguj się do swojego konta CV Optimizer Pro</p>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form method="POST" class="needs-validation" novalidate>
+                            
+                            <!-- Email/Username Field -->
+                            <div class="mb-4">
+                                <label class="form-label">Email lub nazwa użytkownika</label>
+                                <div class="position-relative">
+                                    <i class="bi bi-envelope position-absolute" style="left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); z-index: 5;"></i>
+                                    <input type="text" name="username_or_email" class="form-control" required
+                                           style="padding-left: 3rem;" 
+                                           placeholder="Wprowadź email lub nazwę użytkownika">
+                                </div>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div class="mb-4">
+                                <label class="form-label">Hasło</label>
+                                <div class="position-relative">
+                                    <i class="bi bi-lock position-absolute" style="left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); z-index: 5;"></i>
+                                    <input type="password" name="password" id="passwordField" class="form-control" required
+                                           style="padding-left: 3rem; padding-right: 3rem;" 
+                                           placeholder="Wprowadź swoje hasło">
+                                    <button type="button" id="togglePassword" class="btn btn-sm position-absolute" 
+                                            style="right: 0.5rem; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: var(--text-muted);">
+                                        <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Remember Me & Forgot Password -->
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                                    <label class="form-check-label text-sm text-secondary" for="rememberMe">
+                                        Zapamiętaj mnie
+                                    </label>
+                                </div>
+                                <a href="#" class="text-primary text-sm text-decoration-none">Zapomniałeś hasła?</a>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Zaloguj się
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Register Link -->
+                        <div class="text-center">
+                            <div class="border-top" style="margin: 1.5rem 0; padding-top: 1.5rem;">
+                                <span class="text-secondary text-sm">Nie masz jeszcze konta?</span>
+                                <a href="{{ url_for('auth.register') }}" class="btn btn-outline ms-2">
+                                    <i class="bi bi-person-plus me-1"></i>Zarejestruj się
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trust Indicators -->
+                <div class="text-center mt-4">
+                    <div class="d-flex justify-content-center gap-4 text-xs text-muted">
+                        <span><i class="bi bi-shield-check text-success me-1"></i>Bezpieczne logowanie</span>
+                        <span><i class="bi bi-lock text-success me-1"></i>Szyfrowanie SSL</span>
+                        <span><i class="bi bi-eye-slash text-success me-1"></i>Prywatność</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Password toggle functionality
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('passwordField');
+    const toggleIcon = document.getElementById('togglePasswordIcon');
+    
+    if (togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            
+            toggleIcon.classList.toggle('bi-eye');
+            toggleIcon.classList.toggle('bi-eye-slash');
+        });
+    }
+    
+    // Form validation enhancement
+    const form = document.querySelector('.needs-validation');
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+    }
+    
+    // Add focus enhancement to form fields
+    const formInputs = document.querySelectorAll('.form-control');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+            this.parentElement.style.transition = 'all 0.2s ease-out';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+{% endblock %}

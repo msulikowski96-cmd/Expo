@@ -1,0 +1,813 @@
+{% extends "base.html" %}
+
+{% block title %}Wyniki - CV Optimizer Pro{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between mb-5">
+                <div>
+                    <h1 class="mb-2 text-gradient neon-glow title-effect">
+                        <i class="bi bi-file-earmark-check me-3 icon-bounce floating"></i>Wyniki optymalizacji CV
+                    </h1>
+                    <p class="text-muted fs-5 mb-0">Twoje CV zostało przetworzone przez AI</p>
+                </div>
+                <div class="d-none d-lg-block">
+                    <button class="btn btn-outline-primary ripple" onclick="window.print()">
+                        <i class="bi bi-printer me-2"></i>Drukuj
+                    </button>
+                </div>
+            </div>
+
+            {% if cv_upload %}
+                <div class="card modern-card glass-ultra card-3d hover-lift mb-5">
+                    <div class="card-header border-0 bg-transparent pb-0">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon-medium bg-info bg-gradient me-3">
+                                <i class="bi bi-info-circle"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title mb-1 fw-bold">Informacje o sesji</h3>
+                                <p class="mb-0 text-muted">Szczegóły przetwarzania Twojego CV</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-4">
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="info-item d-flex align-items-center mb-3">
+                                    <div class="info-icon bg-primary bg-gradient rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="bi bi-file-earmark-pdf text-white"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Nazwa pliku</small>
+                                        <strong>{{ cv_upload.filename }}</strong>
+                                    </div>
+                                </div>
+                                <div class="info-item d-flex align-items-center mb-3">
+                                    <div class="info-icon bg-success bg-gradient rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="bi bi-briefcase text-white"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Stanowisko</small>
+                                        <strong>{{ cv_upload.job_title }}</strong>
+                                    </div>
+                                </div>
+                                <div class="info-item d-flex align-items-center">
+                                    <div class="info-icon bg-info bg-gradient rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="bi bi-calendar-check text-white"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Data przesłania</small>
+                                        <strong>{{ cv_upload.created_at.strftime('%d.%m.%Y %H:%M') }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                {% if cv_upload.optimized_at %}
+                                    <div class="info-item d-flex align-items-center mb-3">
+                                        <div class="info-icon bg-warning bg-gradient rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <i class="bi bi-magic text-white"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Optymalizacja</small>
+                                            <strong>{{ cv_upload.optimized_at.strftime('%d.%m.%Y %H:%M') }}</strong>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if cv_upload.analyzed_at %}
+                                    <div class="info-item d-flex align-items-center mb-3">
+                                        <div class="info-icon bg-secondary bg-gradient rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <i class="bi bi-graph-up text-white"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Analiza</small>
+                                            <strong>{{ cv_upload.analyzed_at.strftime('%d.%m.%Y %H:%M') }}</strong>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <div class="mt-4">
+                                    <div class="d-flex align-items-center text-success">
+                                        <i class="bi bi-shield-check me-2"></i>
+                                        <small>Dane są bezpiecznie przechowywane</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if cv_upload.job_description %}
+                            <div class="mt-4 pt-4 border-top">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-file-text text-primary me-2"></i>
+                                    <h6 class="mb-0 fw-bold">Opis stanowiska</h6>
+                                </div>
+                                <div class="job-description-box p-4 rounded-3" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); max-height: 200px; overflow-y: auto; white-space: pre-wrap; line-height: 1.6;">
+                                    {{ cv_upload.job_description }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Optimized CV -->
+                {% if cv_upload.optimized_cv %}
+                    <div class="card mb-4 result-box">
+                        <div class="card-header d-flex justify-content-between align-items-center bg-transparent border-0 pb-0">
+                            <h3 class="card-title mb-0 text-success d-flex align-items-center">
+                                <div class="feature-icon-medium bg-success bg-gradient me-3">
+                                    <i class="bi bi-magic"></i>
+                                </div>
+                                <div>
+                                    <div class="fs-4 fw-bold">Zoptymalizowane CV</div>
+                                    <div class="text-success fs-6 opacity-75">Gotowe do użycia</div>
+                                </div>
+                            </h3>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-success ripple" onclick="copyToClipboard('optimized-cv')">
+                                    <i class="bi bi-clipboard me-1"></i>Kopiuj
+                                </button>
+                                <button class="btn btn-success" onclick="downloadText(document.getElementById('optimized-cv').textContent, 'optimized-cv.txt')">
+                                    <i class="bi bi-download me-1"></i>Pobierz
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body pt-3">
+                            <div class="progress mb-3" style="height: 4px;">
+                                <div class="progress-bar bg-success" style="width: 100%"></div>
+                            </div>
+                            <div id="optimized-cv" class="bg-light p-4 rounded-3" style="white-space: pre-wrap; max-height: 600px; overflow-y: auto; font-family: 'Courier New', monospace; line-height: 1.6; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">{{ cv_upload.optimized_cv }}</div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- CV Analysis -->
+                {% if cv_upload.cv_analysis %}
+                    <div class="card mb-4 result-box">
+                        <div class="card-header d-flex justify-content-between align-items-center bg-transparent border-0 pb-0">
+                            <h3 class="card-title mb-0 text-primary d-flex align-items-center">
+                                <div class="feature-icon-medium bg-primary bg-gradient me-3">
+                                    <i class="bi bi-graph-up"></i>
+                                </div>
+                                <div>
+                                    <div class="fs-4 fw-bold">Analiza CV</div>
+                                    <div class="text-primary fs-6 opacity-75">Szczegółowa ocena</div>
+                                </div>
+                            </h3>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-primary ripple" onclick="copyToClipboard('cv-analysis')">
+                                    <i class="bi bi-clipboard me-1"></i>Kopiuj
+                                </button>
+                                <button class="btn btn-primary" onclick="downloadText(document.getElementById('cv-analysis').textContent, 'cv-analysis.txt')">
+                                    <i class="bi bi-download me-1"></i>Pobierz
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body pt-3">
+                            <div class="progress mb-3" style="height: 4px;">
+                                <div class="progress-bar bg-primary" style="width: 100%"></div>
+                            </div>
+                            <div id="cv-analysis" class="bg-light p-4 rounded-3" style="white-space: pre-wrap; max-height: 600px; overflow-y: auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">{{ cv_upload.cv_analysis }}</div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Original CV -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="card-title mb-0 text-secondary">
+                            <i class="bi bi-file-earmark-text me-2"></i>Oryginalne CV
+                        </h3>
+                        <button class="btn btn-outline-secondary" onclick="toggleOriginal()">
+                            <i class="bi bi-eye me-1"></i>Pokaż/Ukryj
+                        </button>
+                    </div>
+                    <div class="card-body d-none" id="original-cv-content">
+                        <div class="bg-light p-4 rounded" style="white-space: pre-wrap; max-height: 400px; overflow-y: auto;">{{ cv_upload.original_text }}</div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="card result-box">
+                    <div class="card-header bg-transparent border-0 pb-0">
+                        <h3 class="card-title mb-0 d-flex align-items-center">
+                            <div class="feature-icon-medium bg-warning bg-gradient me-3">
+                                <i class="bi bi-tools"></i>
+                            </div>
+                            <div>
+                                <div class="fs-4 fw-bold">Dostępne Akcje</div>
+                                <div class="text-warning fs-6 opacity-75">Wybierz operację</div>
+                            </div>
+                        </h3>
+                    </div>
+                    <div class="card-body pt-3">
+                        <div class="row g-3">
+                            {% if not cv_upload.optimized_cv %}
+                                <div class="col-md-6">
+                                    <button id="optimize-btn" class="btn btn-primary w-100 py-3 ripple" onclick="optimizeCV('{{ session_id }}')">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-magic me-2 fs-5"></i>
+                                            <div>
+                                                <div class="fw-bold">Optymalizuj CV</div>
+                                                <div class="small opacity-75">AI usprawni Twoje CV</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
+                            {% endif %}
+
+                            {% if not cv_upload.cv_analysis %}
+                                <div class="col-md-6">
+                                    <button id="analyze-btn" class="btn btn-success w-100 py-3 ripple" onclick="analyzeCV('{{ session_id }}')">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-graph-up me-2 fs-5"></i>
+                                            <div>
+                                                <div class="fw-bold">Analizuj CV</div>
+                                                <div class="small opacity-75">Otrzymaj szczegółową ocenę</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
+                            {% endif %}
+
+                            <!-- Cover Letter Generation -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card action-card h-100">
+                            <div class="card-body text-center">
+                                <div class="feature-icon bg-success mb-3 mx-auto">
+                                    <i class="bi bi-file-text text-white"></i>
+                                </div>
+                                <h5 class="card-title">List motywacyjny</h5>
+                                <p class="card-text text-muted">Wygeneruj profesjonalny list motywacyjny dopasowany do stanowiska</p>
+                                <button class="btn btn-success" onclick="generateCoverLetter()">
+                                    <i class="bi bi-magic"></i> Generuj list
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interview Questions Generation -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card action-card h-100">
+                            <div class="card-body text-center">
+                                <div class="feature-icon bg-info mb-3 mx-auto">
+                                    <i class="bi bi-question-circle text-white"></i>
+                                </div>
+                                <h5 class="card-title">Pytania na rozmowę</h5>
+                                <p class="card-text text-muted">Przygotuj się do rozmowy kwalifikacyjnej z personalizowanymi pytaniami</p>
+                                <button class="btn btn-info" onclick="generateInterviewQuestions()">
+                                    <i class="bi bi-chat-quote"></i> Generuj pytania
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills Gap Analysis -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card action-card h-100">
+                            <div class="card-body text-center">
+                                <div class="feature-icon bg-warning mb-3 mx-auto">
+                                    <i class="bi bi-graph-up text-white"></i>
+                                </div>
+                                <h5 class="card-title">Analiza luk kompetencyjnych</h5>
+                                <p class="card-text text-muted">Sprawdź jakie umiejętności warto rozwijać dla tego stanowiska</p>
+                                <button class="btn btn-warning" onclick="analyzeSkillsGap()">
+                                    <i class="bi bi-search"></i> Analizuj luki
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                            <div class="col-md-6">
+                                <a href="{{ url_for('index') }}" class="btn btn-outline-light w-100 py-3 ripple">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-plus-circle me-2 fs-5"></i>
+                                        <div>
+                                            <div class="fw-bold">Nowe CV</div>
+                                            <div class="small opacity-75">Rozpocznij od nowa</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-info w-100 py-3 ripple" onclick="window.print()">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-printer me-2 fs-5"></i>
+                                        <div>
+                                            <div class="fw-bold">Drukuj</div>
+                                            <div class="small opacity-75">Wersja do druku</div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cover Letters Section -->
+                {% if cover_letters %}
+                <div class="card modern-card glass-ultra card-3d hover-lift mb-5">
+                    <div class="card-header border-0 bg-transparent pb-0">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon-medium bg-warning bg-gradient me-3">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title mb-1 fw-bold">Listy motywacyjne</h3>
+                                <p class="mb-0 text-muted">Wygenerowane dla tego CV</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-4">
+                        <div class="row g-3">
+                            {% for cover_letter in cover_letters %}
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm hover-lift" style="border-radius: 15px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start mb-3">
+                                            <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-envelope-fill text-white"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="card-title mb-1 fw-bold">{{ cover_letter.job_title }}</h5>
+                                                {% if cover_letter.company_name %}
+                                                <p class="text-muted mb-0 small">{{ cover_letter.company_name }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <small class="text-muted">Utworzony: {{ cover_letter.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                                        </div>
+
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ url_for('view_cover_letter', session_id=cover_letter.session_id) }}" 
+                                               class="btn btn-primary" style="border-radius: 8px;">
+                                                <i class="bi bi-eye me-1"></i> Zobacz list
+                                            </a>
+                                            <button onclick="copyToClipboard('cover-letter-{{ loop.index0 }}')" 
+                                                    class="btn btn-outline-success" style="border-radius: 8px;">
+                                                <i class="bi bi-clipboard me-1"></i>Kopiuj
+                                            </button>
+                                        </div>
+
+                                        <!-- Hidden content for copying -->
+                                        <div id="cover-letter-{{ loop.index0 }}" class="d-none">{{ cover_letter.cover_letter_content }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Interview Questions Section -->
+                {% if interview_questions %}
+                <div class="card modern-card glass-ultra card-3d hover-lift mb-5">
+                    <div class="card-header border-0 bg-transparent pb-0">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon-medium bg-info bg-gradient me-3">
+                                <i class="bi bi-question-circle"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title mb-1 fw-bold">Pytania na rozmowę</h3>
+                                <p class="mb-0 text-muted">Wygenerowane dla tego CV</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-4">
+                        <div class="row g-3">
+                            {% for questions in interview_questions %}
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm hover-lift" style="border-radius: 15px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start mb-3">
+                                            <div class="bg-info rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-chat-quote text-white"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="card-title mb-1 fw-bold">{{ questions.job_title }}</h5>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <small class="text-muted">Utworzony: {{ questions.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                                        </div>
+
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ url_for('view_interview_questions', session_id=questions.session_id) }}" 
+                                               class="btn btn-info" style="border-radius: 8px;">
+                                                <i class="bi bi-eye me-1"></i> Zobacz pytania
+                                            </a>
+                                            <button onclick="copyToClipboard('questions-{{ loop.index0 }}')" 
+                                                    class="btn btn-outline-success" style="border-radius: 8px;">
+                                                <i class="bi bi-clipboard me-1"></i>Kopiuj
+                                            </button>
+                                        </div>
+
+                                        <!-- Hidden content for copying -->
+                                        <div id="questions-{{ loop.index0 }}" class="d-none">{{ questions.questions_content }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Skills Gap Analysis Section -->
+                {% if skills_analyses %}
+                <div class="card modern-card glass-ultra card-3d hover-lift mb-5">
+                    <div class="card-header border-0 bg-transparent pb-0">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon-medium bg-danger bg-gradient me-3">
+                                <i class="bi bi-graph-up"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title mb-1 fw-bold">Analizy luk kompetencyjnych</h3>
+                                <p class="mb-0 text-muted">Wygenerowane dla tego CV</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-4">
+                        <div class="row g-3">
+                            {% for analysis in skills_analyses %}
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm hover-lift" style="border-radius: 15px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start mb-3">
+                                            <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-search text-white"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="card-title mb-1 fw-bold">{{ analysis.job_title }}</h5>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <small class="text-muted">Utworzony: {{ analysis.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                                        </div>
+
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ url_for('view_skills_gap_analysis', session_id=analysis.session_id) }}" 
+                                               class="btn btn-danger" style="border-radius: 8px;">
+                                                <i class="bi bi-eye me-1"></i> Zobacz analizę
+                                            </a>
+                                            <button onclick="copyToClipboard('analysis-{{ loop.index0 }}')" 
+                                                    class="btn btn-outline-success" style="border-radius: 8px;">
+                                                <i class="bi bi-clipboard me-1"></i>Kopiuj
+                                            </button>
+                                        </div>
+
+                                        <!-- Hidden content for copying -->
+                                        <div id="analysis-{{ loop.index0 }}" class="d-none">{{ analysis.analysis_content }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-warning">
+                    <h4>Brak danych</h4>
+                    <p>Nie znaleziono danych dla tej sesji. <a href="{{ url_for('index') }}">Wróć do strony głównej</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyToClipboard(elementId) {
+    const element = document.getElementById(elementId);
+    const text = element.textContent;
+
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-check me-1"></i>Skopiowane!';
+        btn.classList.replace('btn-outline-success', 'btn-success');
+        btn.classList.replace('btn-outline-primary', 'btn-success');
+
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.replace('btn-success', 'btn-outline-success');
+            btn.classList.replace('btn-success', 'btn-outline-primary');
+        }, 2000);
+    });
+}
+
+function toggleOriginal() {
+    const content = document.getElementById('original-cv-content');
+    content.classList.toggle('d-none');
+}
+
+function optimizeCV(sessionId) {
+    const btn = document.getElementById('optimize-btn');
+    btn.disabled = true;
+    btn.classList.add('shimmer');
+    btn.innerHTML = `
+        <div class="d-flex align-items-center justify-content-center">
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            <div>
+                <div class="fw-bold">Optymalizowanie...</div>
+                <div class="small opacity-75">AI pracuje nad Twoim CV</div>
+            </div>
+        </div>
+    `;
+
+    fetch('/optimize-cv', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({session_id: sessionId})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            btn.innerHTML = `
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-check-circle me-2 fs-5"></i>
+                    <div>
+                        <div class="fw-bold">Gotowe!</div>
+                        <div class="small opacity-75">Przeładowywanie...</div>
+                    </div>
+                </div>
+            `;
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            CVOptimizer.showToast('error', 'Błąd: ' + data.message);
+            btn.disabled = false;
+            btn.classList.remove('shimmer');
+            btn.innerHTML = `
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-magic me-2 fs-5"></i>
+                    <div>
+                        <div class="fw-bold">Optymalizuj CV</div>
+                        <div class="small opacity-75">AI usprawni Twoje CV</div>
+                    </div>
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        CVOptimizer.showToast('error', 'Wystąpił błąd: ' + error.message);
+        btn.disabled = false;
+        btn.classList.remove('shimmer');
+        btn.innerHTML = `
+            <div class="d-flex align-items-center justify-content-center">
+                <i class="bi bi-magic me-2 fs-5"></i>
+                <div>
+                    <div class="fw-bold">Optymalizuj CV</div>
+                    <div class="small opacity-75">AI usprawni Twoje CV</div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function analyzeCV(sessionId) {
+    const btn = document.getElementById('analyze-btn');
+    btn.disabled = true;
+    btn.classList.add('shimmer');
+    btn.innerHTML = `
+        <div class="d-flex align-items-center justify-content-center">
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            <div>
+                <div class="fw-bold">Analizowanie...</div>
+                <div class="small opacity-75">AI ocenia Twoje CV</div>
+            </div>
+        </div>
+    `;
+
+    fetch('/analyze-cv', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({session_id: sessionId})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            btn.innerHTML = `
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-check-circle me-2 fs-5"></i>
+                    <div>
+                        <div class="fw-bold">Gotowe!</div>
+                        <div class="small opacity-75">Przeładowywanie...</div>
+                    </div>
+                </div>
+            `;
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            CVOptimizer.showToast('error', 'Błąd: ' + data.message);
+            btn.disabled = false;
+            btn.classList.remove('shimmer');
+            btn.innerHTML = `
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="bi bi-graph-up me-2 fs-5"></i>
+                    <div>
+                        <div class="fw-bold">Analizuj CV</div>
+                        <div class="small opacity-75">Otrzymaj szczegółową ocenę</div>
+                    </div>
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        CVOptimizer.showToast('error', 'Wystąpił błąd: ' + error.message);
+        btn.disabled = false;
+        btn.classList.remove('shimmer');
+        btn.innerHTML = `
+            <div class="d-flex align-items-center justify-content-center">
+                <i class="bi bi-graph-up me-2 fs-5"></i>
+                <div>
+                    <div class="fw-bold">Analizuj CV</div>
+                    <div class="small opacity-75">Otrzymaj szczegółową ocenę</div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function generateCoverLetter() {
+    const button = event.target;
+
+    button.disabled = true;
+    button.innerHTML = '<i class="bi bi-hourglass-split"></i> Generowanie...';
+
+    const sessionId = '{{ session_id }}';
+    const jobTitle = '{{ cv_upload.job_title|replace("'", "\\'") }}';
+    const jobDescription = {{ (cv_upload.job_description or "")|tojson }};
+
+    const data = {
+        session_id: sessionId,
+        job_title: jobTitle,
+        job_description: jobDescription,
+        company_name: ''
+    };
+
+    fetch('/generate-cover-letter', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (typeof CVOptimizer !== 'undefined' && CVOptimizer.showToast) {
+                CVOptimizer.showToast('success', data.message || 'List motywacyjny został wygenerowany!');
+            } else {
+                alert('List motywacyjny został wygenerowany!');
+            }
+            setTimeout(() => {
+                window.open(`/cover-letter/${data.cover_letter_session_id}`, '_blank');
+            }, 1500);
+        } else {
+            if (typeof CVOptimizer !== 'undefined' && CVOptimizer.showToast) {
+                CVOptimizer.showToast('error', data.message || 'Wystąpił błąd podczas generowania listu');
+            } else {
+                alert(data.message || 'Wystąpił błąd podczas generowania listu');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        if (typeof CVOptimizer !== 'undefined' && CVOptimizer.showToast) {
+            CVOptimizer.showToast('error', 'Wystąpił błąd podczas generowania listu. Spróbuj ponownie.');
+        } else {
+            alert('Wystąpił błąd podczas generowania listu. Spróbuj ponownie.');
+        }
+    })
+    .finally(() => {
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-magic"></i> Generuj list';
+    });
+}
+
+function generateInterviewQuestions() {
+    const button = event.target;
+
+    button.disabled = true;
+    button.innerHTML = '<i class="bi bi-hourglass-split"></i> Generowanie...';
+
+    const sessionId = '{{ session_id }}';
+    const jobTitle = {{ cv_upload.job_title|tojson }};
+    const jobDescription = {{ (cv_upload.job_description or "")|tojson }};
+
+    const data = {
+        session_id: sessionId,
+        job_title: jobTitle,
+        job_description: jobDescription
+    };
+
+    fetch('/generate-interview-questions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (typeof CVOptimizer !== 'undefined' && CVOptimizer.showToast) {
+                CVOptimizer.showToast('success', data.message || 'Pytania zostały wygenerowane!');
+            } else {
+                alert('Pytania zostały wygenerowane!');
+            }
+            // Przeładuj stronę aby pokazać nowe pytania
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            if (typeof CVOptimizer !== 'undefined' && CVOptimizer.showToast) {
+                CVOptimizer.showToast('error', data.message || 'Wystąpił błąd podczas generowania pytań');
+            } else {
+                alert(data.message || 'Wystąpił błąd podczas generowania pytań');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        if (typeof CVOptimizer !== 'undefined' && CVOptimizer.showToast) {
+            CVOptimizer.showToast('error', 'Wystąpił błąd podczas generowania pytań. Spróbuj ponownie.');
+        } else {
+            alert('Wystąpił błąd podczas generowania pytań. Spróbuj ponownie.');
+        }
+    })
+    .finally(() => {
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-chat-quote"></i> Generuj pytania';
+    });
+}
+
+function analyzeSkillsGap() {
+    const button = event.target;
+
+    button.disabled = true;
+    button.innerHTML = '<i class="bi bi-hourglass-split"></i> Analizowanie...';
+
+    const sessionId = '{{ session_id }}';
+    const jobTitle = {{ cv_upload.job_title|tojson }};
+    const jobDescription = {{ (cv_upload.job_description or "")|tojson }};
+    
+    const data = {
+        session_id: sessionId,
+        job_title: jobTitle,
+        job_description: jobDescription
+    };
+
+    fetch('/analyze-skills-gap', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (typeof CVOptimizer !== 'undefined' && CVOptimizer.showToast) {
+                CVOptimizer.showToast('success', data.message || 'Analiza została ukończona!');
+            } else {
+                alert('Analiza została ukończona!');
+            }
+            // Przeładuj stronę aby pokazać nową analizę
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            if (typeof CVOptimizer !== 'undefined' && CVOptimizer.showToast) {
+                CVOptimizer.showToast('error', data.message || 'Wystąpił błąd podczas analizy');
+            } else {
+                alert(data.message || 'Wystąpił błąd podczas analizy');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        if (typeof CVOptimizer !== 'undefined' && CVOptimizer.showToast) {
+            CVOptimizer.showToast('error', 'Wystąpił błąd podczas analizy. Spróbuj ponownie.');
+        } else {
+            alert('Wystąpił błąd podczas analizy. Spróbuj ponownie.');
+        }
+    })
+    .finally(() => {
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-search"></i> Analizuj luki';
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %}Rejestracja - CV Optimizer Pro{% endblock %}
+
+{% block content %}
+<section class="min-vh-100 d-flex align-items-center" style="background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--primary-bg) 100%); padding: 2rem 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                <div class="card animate-fade-in-up">
+                    <div class="card-body" style="padding: 3rem;">
+                        <!-- Header -->
+                        <div class="text-center mb-4">
+                            <div class="brand-icon mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+                            <h2 class="text-2xl font-weight-bold mb-2">Dołącz do nas!</h2>
+                            <p class="text-secondary">Stwórz konto i zacznij optymalizować swoje CV za darmo</p>
+                        </div>
+
+                        <!-- Registration Form -->
+                        <form method="POST" class="needs-validation" novalidate>
+                            
+                            <!-- Username Field -->
+                            <div class="mb-3">
+                                <label class="form-label">Nazwa użytkownika</label>
+                                <div class="position-relative">
+                                    <i class="bi bi-person position-absolute" style="left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); z-index: 5;"></i>
+                                    <input type="text" name="username" class="form-control" required
+                                           style="padding-left: 3rem;" 
+                                           placeholder="Wybierz nazwę użytkownika">
+                                </div>
+                            </div>
+
+                            <!-- Email Field -->
+                            <div class="mb-3">
+                                <label class="form-label">Adres email</label>
+                                <div class="position-relative">
+                                    <i class="bi bi-envelope position-absolute" style="left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); z-index: 5;"></i>
+                                    <input type="email" name="email" class="form-control" required
+                                           style="padding-left: 3rem;" 
+                                           placeholder="twój@email.com">
+                                </div>
+                            </div>
+
+                            <!-- Name Fields Row -->
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label">Imię</label>
+                                    <div class="position-relative">
+                                        <i class="bi bi-person-badge position-absolute" style="left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); z-index: 5;"></i>
+                                        <input type="text" name="first_name" class="form-control" required
+                                               style="padding-left: 3rem;" 
+                                               placeholder="Imię">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Nazwisko</label>
+                                    <div class="position-relative">
+                                        <i class="bi bi-person-badge-fill position-absolute" style="left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); z-index: 5;"></i>
+                                        <input type="text" name="last_name" class="form-control" required
+                                               style="padding-left: 3rem;" 
+                                               placeholder="Nazwisko">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div class="mb-3">
+                                <label class="form-label">Hasło</label>
+                                <div class="position-relative">
+                                    <i class="bi bi-lock position-absolute" style="left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); z-index: 5;"></i>
+                                    <input type="password" name="password" id="passwordField" class="form-control" required
+                                           style="padding-left: 3rem; padding-right: 3rem;" 
+                                           placeholder="Minimum 6 znaków">
+                                    <button type="button" id="togglePassword" class="btn btn-sm position-absolute" 
+                                            style="right: 0.5rem; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: var(--text-muted);">
+                                        <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="text-xs text-muted mt-1">Hasło musi mieć co najmniej 6 znaków</div>
+                            </div>
+
+                            <!-- Confirm Password Field -->
+                            <div class="mb-4">
+                                <label class="form-label">Potwierdź hasło</label>
+                                <div class="position-relative">
+                                    <i class="bi bi-shield-check position-absolute" style="left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); z-index: 5;"></i>
+                                    <input type="password" name="password2" id="confirmPasswordField" class="form-control" required
+                                           style="padding-left: 3rem;" 
+                                           placeholder="Powtórz hasło">
+                                </div>
+                            </div>
+
+                            <!-- Terms Checkbox -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms" required>
+                                    <label class="form-check-label text-sm text-secondary" for="terms">
+                                        Akceptuję <a href="#" class="text-primary">regulamin</a> i <a href="#" class="text-primary">politykę prywatności</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-person-plus me-2"></i>Zarejestruj się za darmo
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Login Link -->
+                        <div class="text-center">
+                            <div class="border-top" style="margin: 1.5rem 0; padding-top: 1.5rem;">
+                                <span class="text-secondary text-sm">Masz już konto?</span>
+                                <a href="{{ url_for('auth.login') }}" class="btn btn-outline ms-2">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i>Zaloguj się
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Benefits Preview -->
+                <div class="text-center mt-4">
+                    <div class="row g-2 text-xs text-muted">
+                        <div class="col-4">
+                            <i class="bi bi-check-circle text-success d-block mb-1"></i>
+                            <span>Bezpłatny start</span>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-lightning text-warning d-block mb-1"></i>
+                            <span>Instant AI</span>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-shield-check text-info d-block mb-1"></i>
+                            <span>100% Bezpieczne</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Password toggle functionality
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('passwordField');
+    const toggleIcon = document.getElementById('togglePasswordIcon');
+    
+    if (togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            
+            toggleIcon.classList.toggle('bi-eye');
+            toggleIcon.classList.toggle('bi-eye-slash');
+        });
+    }
+    
+    // Password confirmation validation
+    const confirmPasswordField = document.getElementById('confirmPasswordField');
+    if (confirmPasswordField) {
+        confirmPasswordField.addEventListener('input', function() {
+            if (this.value !== passwordField.value) {
+                this.setCustomValidity('Hasła nie są identyczne');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        passwordField.addEventListener('input', function() {
+            if (confirmPasswordField.value && confirmPasswordField.value !== this.value) {
+                confirmPasswordField.setCustomValidity('Hasła nie są identyczne');
+            } else {
+                confirmPasswordField.setCustomValidity('');
+            }
+        });
+    }
+    
+    // Form validation enhancement
+    const form = document.querySelector('.needs-validation');
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+    }
+    
+    // Add focus enhancement to form fields
+    const formInputs = document.querySelectorAll('.form-control');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+            this.parentElement.style.transition = 'all 0.2s ease-out';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Real-time password strength indicator
+    if (passwordField) {
+        passwordField.addEventListener('input', function() {
+            const password = this.value;
+            const strengthIndicator = this.parentElement.nextElementSibling;
+            
+            if (password.length < 6) {
+                strengthIndicator.textContent = 'Hasło musi mieć co najmniej 6 znaków';
+                strengthIndicator.className = 'text-xs text-danger mt-1';
+            } else if (password.length < 8) {
+                strengthIndicator.textContent = 'Hasło słabe - dodaj więcej znaków';
+                strengthIndicator.className = 'text-xs text-warning mt-1';
+            } else {
+                strengthIndicator.textContent = 'Siła hasła: dobra';
+                strengthIndicator.className = 'text-xs text-success mt-1';
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
