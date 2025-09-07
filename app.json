@@ -16,7 +16,7 @@
       "backgroundColor": "#ffffff"
     },
     "edgeToEdgeEnabled": true,
-    "package": "com.yourname.cvtoai"  // Replace with your desired package name
+    "package": "com.teabe79ths.cvtoai" // Replace with your desired package name
   },
   "web": {
     "bundler": "metro",
