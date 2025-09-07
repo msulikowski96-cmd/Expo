@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated/lib/reanimated2/js-reanimated';
 import { Provider as PaperProvider } from 'react-native-paper';
-import Animated from 'react-native-reanimated';
+import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
