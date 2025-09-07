@@ -1,80 +1,155 @@
-import { Image } from "expo-image";
-import { Platform, StyleSheet } from "react-native";
 
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, View, Alert } from 'react-native';
+import { Button, Card, Title, Paragraph, TextInput, Chip } from 'react-native-paper';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const FEATURES = [
+  'CV Analysis & Scoring',
+  'Skills Gap Analysis',
+  'ATS Optimization',
+  'Cover Letter Generation',
+  'Interview Questions',
+  'Career Recommendations'
+];
 
 export default function HomeScreen() {
+  const [jobDescription, setJobDescription] = useState('');
+  const [analysisType, setAnalysisType] = useState('cv_analysis');
+
+  const saveJobDescription = async () => {
+    try {
+      await AsyncStorage.setItem('jobDescription', jobDescription);
+      Alert.alert('Success', 'Job description saved for analysis');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to save job description');
+    }
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Replit + Expo</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: "cmd + d",
-              android: "cmd + m",
-              web: "F12",
-            })}
-          </ThemedText>{" "}
-          to open developer tools.
+    <ScrollView style={styles.container}>
+      <ThemedView style={styles.header}>
+        <ThemedText type="title" style={styles.title}>CvToai</ThemedText>
+        <ThemedText style={styles.subtitle}>
+          AI-Powered CV Analysis & Career Enhancement
         </ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">
-            npm run reset-project
-          </ThemedText>{" "}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{" "}
-          directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title>Welcome to CvToai</Title>
+          <Paragraph>
+            Transform your career with AI-powered CV analysis, personalized recommendations, 
+            and professional development tools.
+          </Paragraph>
+        </Card.Content>
+      </Card>
+
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title>Key Features</Title>
+          <View style={styles.featuresContainer}>
+            {FEATURES.map((feature, index) => (
+              <Chip key={index} style={styles.chip} mode="outlined">
+                {feature}
+              </Chip>
+            ))}
+          </View>
+        </Card.Content>
+      </Card>
+
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title>Job Description (Optional)</Title>
+          <Paragraph style={styles.description}>
+            Paste a job description to get targeted analysis and recommendations.
+          </Paragraph>
+          <TextInput
+            mode="outlined"
+            placeholder="Enter job description here..."
+            value={jobDescription}
+            onChangeText={setJobDescription}
+            multiline
+            numberOfLines={6}
+            style={styles.textInput}
+          />
+          <Button 
+            mode="contained" 
+            onPress={saveJobDescription}
+            style={styles.button}
+            disabled={!jobDescription.trim()}
+          >
+            Save for Analysis
+          </Button>
+        </Card.Content>
+      </Card>
+
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title>Get Started</Title>
+          <Paragraph>
+            Upload your CV in the Upload tab to begin your AI-powered career analysis.
+          </Paragraph>
+          <Button 
+            mode="contained" 
+            style={[styles.button, styles.primaryButton]}
+            onPress={() => {/* Navigate to upload tab */}}
+          >
+            Upload CV Now
+          </Button>
+        </Card.Content>
+      </Card>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  header: {
+    padding: 20,
+    backgroundColor: '#007bff',
+    alignItems: 'center',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
+  title: {
+    color: '#ffffff',
+    fontSize: 32,
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    color: '#ffffff',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  card: {
+    margin: 16,
+    elevation: 4,
+  },
+  featuresContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 10,
+  },
+  chip: {
+    marginBottom: 5,
+  },
+  description: {
+    marginBottom: 10,
+    color: '#6c757d',
+  },
+  textInput: {
+    marginBottom: 15,
+  },
+  button: {
+    marginTop: 10,
+  },
+  primaryButton: {
+    backgroundColor: '#007bff',
   },
 });
