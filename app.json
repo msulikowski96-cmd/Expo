@@ -1,8 +1,7 @@
-
 {
   "expo": {
     "name": "CvToai",
-    "slug": "cvtoai",
+    "slug": "hhhhj",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -44,6 +43,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "84f2d6f1-8749-4d11-b186-df8dd590f29d"
+      }
+    },
+    "owner": "teabe79ths"
   }
 }
